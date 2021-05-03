@@ -1,7 +1,6 @@
 int printf(char * s);
 int getchar();
 
-
 // *************************** SUBLEQ bit operations ************************
 int rightShift5(int n) {
     return (((((n/2)/2)/2)/2)/2);
@@ -37,6 +36,18 @@ void solid() {
     printf("\x1be");
 }
 
+void solidbold() {
+    printf("\x1bh");
+}
+
+void dotted() {
+    printf("\x1ba");
+}
+
+void dottedbold() {
+    printf("\x1bi");
+}
+
 void coords(int x, int y) {
     printf("%c", rightShift5(y) + 32);
     printf("%c", and(y, 31) + 96);
@@ -47,6 +58,13 @@ void coords(int x, int y) {
 void graph() {
     printf("\x1d");
 }
+
+void line(int x1,int y1, int x2, int y2) {
+	graph();
+	coords(x1,y1);
+	coords(x2,y2);
+}
+
 // ************************ End Techtronix control **************************
 
 // ************************ 3D rendering ************************************
@@ -65,6 +83,15 @@ X' = X * (F/Z)
 
 Y' = Y * (F/Z) */
 
+void project(int x, int y, int z, int *x_, int *y_) {
+	*x_ = x * (1 / z);
+	*y_ = y * (1 / z);
+    *y_ = 767 - *y_;
+    //printf("%d, %d\r\n", *x_, *y_);
+}
+
+
+/*
 function rotate(pitch, roll, yaw) {
     var cosa = Math.cos(yaw);
     var sina = Math.sin(yaw);
@@ -97,26 +124,38 @@ function rotate(pitch, roll, yaw) {
         points[i].z = Azx*px + Azy*py + Azz*pz;
     }
 }
+*/
 
 // ********************* End 3D rendering *******************************
 
-
+void line3d(int x1, int y1, int z1, int x2, int y2, int z2) {
+    int x1_ = 0, y1_ = 0, x2_ = 0, y2_ = 0;
+	project(x1,y1,z1, &x1_, &y1_);
+	project(x2,y1,z2, &x2_,&y2_);
+    	
+	line(x1_, y1_, x2_, y2_);
+}
 
 int main() {
    exitTechtronixMode();
    tektronixMode();
    tektronixMode();
    clear();
-   solid();
+   solidbold();
    printf("   \n");
    printf("   \n");
-   graph();
-   coords(500,0);
-   coords(500,1000);
+   line(650,150,650,767);
+   line(0,150,1000,150);
+
+   line3d(60,300,-1, 60,300,-1500);
+
    printf("\r\n");
-   getchar();
+   printf("\r\n");
+
+   int c = getchar();
+
    clear();
    exitTechtronixMode();
-   clear();
+   clear(); 
 }
 
