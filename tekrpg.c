@@ -83,13 +83,32 @@ X' = X * (F/Z)
 
 Y' = Y * (F/Z) */
 
-void project(int x, int y, int z, int *x_, int *y_) {
-	*x_ = x * (1 / z);
-	*y_ = y * (1 / z);
-    *y_ = 767 - *y_;
-    //printf("%d, %d\r\n", *x_, *y_);
-}
+int CANVAS_W = 1024;
+int CANVAS_H = 768;
+int VIEW_W = 650;
+int VIEW_H = 618;
+int VIEW_Y = 150;
 
+void projectandview(int x, int y, int z, int *x_, int *y_) {
+    printf("step 0: %d, %d, %d\r\n", x, y, z);
+    *x_ = x * 10 / z;
+    *y_ = y * 10 / z;
+    printf("step 1: %d, %d\r\n", *x_, *y_);
+    
+    *x_ = *x_ * CANVAS_W / VIEW_W;
+    *y_ = *y_ * CANVAS_H / VIEW_H;
+
+    printf("step 2: %d, %d\r\n", *x_, *y_);
+    
+    *y_ = (VIEW_Y + VIEW_H) - *y_;
+    *y_ += VIEW_Y;
+
+    printf("step 3: %d, %d\r\n", *x_, *y_);
+    *x_ = CANVAS_W / 2 + *x_;
+    *y_ = CANVAS_H / 2 + *y_;
+
+	printf("step 4: %d, %d\r\n", *x_, *y_);    
+}
 
 /*
 function rotate(pitch, roll, yaw) {
@@ -130,8 +149,8 @@ function rotate(pitch, roll, yaw) {
 
 void line3d(int x1, int y1, int z1, int x2, int y2, int z2) {
     int x1_ = 0, y1_ = 0, x2_ = 0, y2_ = 0;
-	project(x1,y1,z1, &x1_, &y1_);
-	project(x2,y1,z2, &x2_,&y2_);
+	projectandview(x1,y1,z1, &x1_, &y1_);
+	projectandview(x2,y1,z2, &x2_, &y2_);
     	
 	line(x1_, y1_, x2_, y2_);
 }
@@ -144,10 +163,11 @@ int main() {
    solidbold();
    printf("   \n");
    printf("   \n");
+      
    line(650,150,650,767);
    line(0,150,1000,150);
 
-   line3d(60,300,-1, 60,300,-1500);
+   line3d(-150,70,10, -150,70,123);
 
    printf("\r\n");
    printf("\r\n");
