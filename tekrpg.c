@@ -90,24 +90,23 @@ int VIEW_H = 618;
 int VIEW_Y = 150;
 
 void projectandview(int x, int y, int z, int *x_, int *y_) {
-    printf("step 0: %d, %d, %d\r\n", x, y, z);
-    *x_ = x * 10 / z;
-    *y_ = y * 10 / z;
-    printf("step 1: %d, %d\r\n", *x_, *y_);
+    //printf("step 0: %d, %d, %d\r\n", x, y, z);
+    *x_ = x * 2 / z;
+    *y_ = y * 2 / z;
+    //printf("step 1: %d, %d\r\n", *x_, *y_);
     
     *x_ = *x_ * CANVAS_W / VIEW_W;
     *y_ = *y_ * CANVAS_H / VIEW_H;
 
-    printf("step 2: %d, %d\r\n", *x_, *y_);
+    //printf("step 2: %d, %d\r\n", *x_, *y_);
     
-    *y_ = (VIEW_Y + VIEW_H) - *y_;
-    *y_ += VIEW_Y;
+    //*y_ = (VIEW_Y + VIEW_H) - *y_;
 
-    printf("step 3: %d, %d\r\n", *x_, *y_);
+    //printf("step 3: %d, %d\r\n", *x_, *y_);
     *x_ = CANVAS_W / 2 + *x_;
     *y_ = CANVAS_H / 2 + *y_;
 
-	printf("step 4: %d, %d\r\n", *x_, *y_);    
+	//printf("step 4: %d, %d\r\n", *x_, *y_);          
 }
 
 /*
@@ -150,7 +149,13 @@ function rotate(pitch, roll, yaw) {
 void line3d(int x1, int y1, int z1, int x2, int y2, int z2) {
     int x1_ = 0, y1_ = 0, x2_ = 0, y2_ = 0;
 	projectandview(x1,y1,z1, &x1_, &y1_);
-	projectandview(x2,y1,z2, &x2_, &y2_);
+	projectandview(x2,y2,z2, &x2_, &y2_);
+
+/*
+    if (*x2_>=CANVAS_W) *x2_ = CANVAS_W-1;
+    if (*y1_>=CANVAS_H) *y1_ = CANVAS_H-1;
+
+    if (*y2_>=CANVAS_H) *y2_ = CANVAS_H-1; */
     	
 	line(x1_, y1_, x2_, y2_);
 }
@@ -167,7 +172,8 @@ int main() {
    line(650,150,650,767);
    line(0,150,1000,150);
 
-   line3d(-150,70,10, -150,70,123);
+   line3d(-550,330,5, -550,330,223);
+   line3d(550,330,5, 550,330,223);
 
    printf("\r\n");
    printf("\r\n");
